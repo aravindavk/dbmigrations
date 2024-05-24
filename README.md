@@ -2,6 +2,20 @@
 
 Generic db migration tool to generate the Upgrade sql statements or downgrade sql statements based on the given timestamp. This tool is not specific to any Database or doesn't maintain the version information.
 
+It is inspired by [https://github.com/amberframework/micrate](micrate), but this project only focused on generating single SQL file for upgrade or downgrade. This doesn't modify or execute the SQL code.
+
+## Install
+
+Clone this repo and run `dub build`. Copy the generated binary to `/usr/local/bin`.
+
+```
+git clone https://github.com/aravindavk/dbmigrations.git
+cd dbmigrations
+dub build --compiler=ldc2 -b release
+sudo cp dbmigrations /usr/local/bin/
+```
+
+## Usage
 Create the migrations directory in your project directory. For example,
 
 ```
@@ -9,12 +23,12 @@ cd myproject
 mkdir -p db/migrations
 ```
 
-## Scaffold
+### Scaffold
 
 Now create the migration file by running the below command.
 
 ```console
-$ /usr/bin/dbmigrations -d ./db/migrations scaffold -n users
+$ dbmigrations -d ./db/migrations scaffold -n users
 Created ./db/migrations/20240524213223-users.sql
 ```
 
@@ -37,12 +51,12 @@ CREATE TABLE users(
 DROP TABLE users;
 ```
 
-## Upgrade
+### Upgrade
 
 Run `dbmigrations up` to generate the migration file based on given timestamp.
 
 ```console
-$ /usr/bin/dbmigrations -d ./db/migrations up
+$ dbmigrations -d ./db/migrations up
 Included files:
 20240524135055-users.sql
 
@@ -55,27 +69,27 @@ Execute the SQL file to run migration (upgrade/downgrade). For example, Postgres
 To generate the migration file based on the given timestamp.
 
 ```
-$ /usr/bin/dbmigrations -d ./db/migrations up -t 20240524135847
+$ dbmigrations -d ./db/migrations up -t 20240524135847
 ```
 
-## Status
+### Status
 
 ```console
-$ /usr/bin/dbmigrations -d ./db/migrations status
+$ dbmigrations -d ./db/migrations status
    pending  20240524135055-users.sql
 ```
 
 ```console
-$ /usr/bin/dbmigrations -d ./db/migrations status -t 20240524135055
+$ dbmigrations -d ./db/migrations status -t 20240524135055
       done  20240524135055-users.sql
 ```
 
-## Downgrade(one by one)
+### Downgrade(one by one)
 
 Generates the migration file based on the given timestamp. Rollback only the last migration after the given timestamp.
 
 ```console
-$ /usr/bin/dbmigrations -d ./db/migrations down -t 20240524135055
+$ dbmigrations -d ./db/migrations down -t 20240524135055
 Included files:
 20240524135055-users.sql
 
