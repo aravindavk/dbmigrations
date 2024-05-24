@@ -9,6 +9,8 @@ cd myproject
 mkdir -p db/migrations
 ```
 
+## Scaffold
+
 Now create the migration file by running the below command.
 
 ```console
