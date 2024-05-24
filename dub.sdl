@@ -1,0 +1,5 @@
+name "dbmigrations"
+description "Simple tool for managing Database migrations"
+authors "Aravinda VK <mail@aravindavk.in>"
+copyright "Copyright © 2024, Aravinda VK <mail@aravindavk.in>"
+license "MIT"
