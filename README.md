@@ -83,9 +83,6 @@ Execute the SQL file to run migration (upgrade/downgrade). For example, Postgres
   sudo -u postgres psql mydb -f /tmp/dbmigration.sql
 ```
 
-To generate the migration file based on the given timestamp.
-```
-
 ## Contributing
 
 - Fork it (https://github.com/aravindavk/dbmigrations/fork)
