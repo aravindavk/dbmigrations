@@ -1,19 +1,6 @@
 # Database migration tool
 
-Database migration tool to apply all available migrations from `db/migrations` (customizable) directory.
-
-It is inspired by [https://github.com/amberframework/micrate](micrate).
-
-## Install
-
-Clone this repo and run `dub build`. Copy the generated binary to `/usr/local/bin`.
-
-```
-git clone https://github.com/aravindavk/dbmigrations.git
-cd dbmigrations
-dub build --compiler=ldc2 -b release
-sudo cp dbmigrations /usr/local/bin/
-```
+Database migration tool to apply all available migrations from `db/migrations` (customizable) directory. It is inspired by [https://github.com/amberframework/micrate](micrate).
 
 ## Usage
 Create the migrations directory in your project directory. For example,
@@ -23,12 +10,18 @@ cd myproject
 mkdir -p db/migrations
 ```
 
+Export the DATABASE_URL. For example,
+
+```
+export DATABASE_URL=postgres://postgres:secret@localhost:5432/myapp_dev
+```
+
 ### Scaffold
 
 Now create the migration file by running the below command.
 
 ```console
-$ dbmigrations -d ./db/migrations scaffold -n users
+$ dub run dbmigrations@0.2.0 scaffold -n users
 Created ./db/migrations/20240524213223-users.sql
 ```
 
@@ -53,51 +46,34 @@ DROP TABLE users;
 
 ### Upgrade
 
-Run `dbmigrations up` to generate the migration file based on given timestamp.
+Run `dbmigrations up` to apply all the available migrations.
 
 ```console
-$ dbmigrations -d ./db/migrations up
-Included files:
-20240524135055-users.sql
-
-Migration file generated. Path: /tmp/dbmigration.sql
-Execute the SQL file to run migration (upgrade/downgrade). For example, Postgres
-
-  sudo -u postgres psql mydb -f /tmp/dbmigration.sql
-```
-
-To generate the migration file based on the given timestamp.
-
-```
-$ dbmigrations -d ./db/migrations up -t 20240524135847
+$ dub run dbmigrations@0.2.0 up
+OK  20240524135055-users
+OK  20240524135713-api-keys
 ```
 
 ### Status
 
-```console
-$ dbmigrations -d ./db/migrations status
-   pending  20240524135055-users.sql
-```
+Check the status of the migrations by running
 
 ```console
-$ dbmigrations -d ./db/migrations status -t 20240524135055
-      done  20240524135055-users.sql
+$ dub run dbmigrations@0.2.0 status
+Sep 02, 2024 06:09:50  20240524135055-users
+              pending  20240524135713-api-keys
 ```
 
 ### Downgrade(one by one)
 
-Generates the migration file based on the given timestamp. Rollback only the last migration after the given timestamp.
-
 ```console
-$ dbmigrations -d ./db/migrations down -t 20240524135055
-Included files:
-20240524135055-users.sql
-
-Migration file generated. Path: /tmp/dbmigration.sql
-Execute the SQL file to run migration (upgrade/downgrade). For example, Postgres
-
-  sudo -u postgres psql mydb -f /tmp/dbmigration.sql
+$ dub run dbmigrations@0.2.0 down
+OK  20240524135713-api-keys
 ```
+
+## TODO:
+
+- Only Postgres is supported now, add support for MySQL and Sqlite
 
 ## Contributing
 

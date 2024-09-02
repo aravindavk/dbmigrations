@@ -163,18 +163,17 @@ int commandDown(string[] args)
     auto fileTs = parseFilename(sqlFileName);
 
     auto query = appender!string;
-    if (sqlFileName.exists)
-    {
-        auto f = File(sqlFileName);
-        bool downStarted = false;
-        foreach (l; f.byLine)
-        {
-            if (l.startsWith("-- +DOWN"))
-                downStarted = true;
+    enforceMigration(sqlFileName.exists, "Migration file not found (" ~ sqlFileName ~ ")");
 
-            if (downStarted)
-                query.put(l ~ "\n");
-        }
+    auto f = File(sqlFileName);
+    bool downStarted = false;
+    foreach (l; f.byLine)
+    {
+        if (l.startsWith("-- +DOWN"))
+            downStarted = true;
+
+        if (downStarted)
+            query.put(l ~ "\n");
     }
 
     if (query.capacity > 0)
@@ -195,6 +194,8 @@ int commandScaffold(string[] args)
         "n|name", "Migration file name", &settings.scaffoldName
     );
     // dfmt on
+
+    // TODO: Validate the name with space or special chars
 
     import std.datetime;
     import std.format;
