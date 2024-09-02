@@ -1,61 +1,50 @@
 import std.stdio;
 import std.getopt;
-import std.process;
 import std.string;
 
 import commands;
 
-string migrationsDir = "./db/migrations";
-long timestamp;
-string scaffoldName;
-
 int main(string[] args)
 {
+    auto commands = [
+        "up": &commandUp,
+        "down": &commandDown,
+        "scaffold": &commandScaffold,
+        "status": &commandStatus
+    ];
+
     // dfmt off
-    auto opts = getopt(
+    auto globalOpts = getopt(
         args,
-        //config.passThrough,
-        "d|dir", "Migration files directory", &migrationsDir,
-        "t|timestamp", "Timestamp of current migration", &timestamp,
-        "n|name", "Migration file to create (scaffold)", &scaffoldName
+        std.getopt.config.passThrough,
+        "d|dir", "Migration files directory (Default: db/migrations)", &settings.migrationFilesDir,
+        "debug", "Debug mode", &settings.debugEnabled
     );
     // dfmt on
 
-    if (opts.helpWanted || args.length == 1)
+    if (args.length < 2 || globalOpts.helpWanted)
     {
-        defaultGetoptPrinter("Db migration tool", opts.options);
-        return 0;
-    }
-
-    migrationsDir = migrationsDir.stripRight("/");
-
-    switch (args[1])
-    {
-    case "up":
-        migrateUp(migrationsDir, timestamp);
-        break;
-    case "down":
-        migrateDown(migrationsDir, timestamp);
-        break;
-    case "status":
-        showStatus(migrationsDir, timestamp);
-        break;
-    case "scaffold":
-        import std.range;
-
-        if (scaffoldName.empty)
-        {
-            stderr.writeln("Scaffold name is empty");
-            return 1;
-        }
-        scaffold(migrationsDir, scaffoldName);
-        break;
-    default:
-        stderr.writeln("Unknown sub-command \"" ~ args[1] ~ "\"");
+        commandHelp;
         return 1;
     }
 
-    // Deploy versions table if not exists
+    settings.migrationFilesDir = settings.migrationFilesDir.stripRight("/");
 
-    return 0;
+    import std.file;
+
+    if (!settings.migrationFilesDir.exists)
+    {
+        stderr.writeln("Migration directory (" ~ settings.migrationFilesDir ~ ") doesn't exists");
+        return 1;
+    }
+
+    auto func = (args[1] in commands);
+
+    if (func is null)
+    {
+        writeln("Unknown sub-command");
+        commandHelp;
+        return 1;
+    }
+    return (*func)(args);
 }
