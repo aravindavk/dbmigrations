@@ -1,8 +1,8 @@
 # Database migration tool
 
-Generic db migration tool to generate the Upgrade sql statements or downgrade sql statements based on the given timestamp. This tool is not specific to any Database or doesn't maintain the version information.
+Database migration tool to apply all available migrations from `db/migrations` (customizable) directory.
 
-It is inspired by [https://github.com/amberframework/micrate](micrate), but this project only focused on generating single SQL file for upgrade or downgrade. This doesn't modify or execute the SQL code.
+It is inspired by [https://github.com/amberframework/micrate](micrate).
 
 ## Install
 
