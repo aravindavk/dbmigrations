@@ -1,6 +1,6 @@
 # Database migration tool
 
-Database migration tool to apply all available migrations from `db/migrations` (customizable) directory. It is inspired by [https://github.com/amberframework/micrate](micrate).
+Database migration tool to apply all available migrations from `db/migrations` (customizable) directory. It is inspired by [micrate](https://github.com/amberframework/micrate).
 
 ## Usage
 Create the migrations directory in your project directory. For example,
