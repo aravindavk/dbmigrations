@@ -16,12 +16,18 @@ Export the DATABASE_URL. For example,
 export DATABASE_URL=postgres://postgres:secret@localhost:5432/myapp_dev
 ```
 
+For SQLite,
+
+```
+export DATABASE_URL=sqlite:////var/lib/myapp/myapp.db
+```
+
 ### Scaffold
 
 Now create the migration file by running the below command.
 
 ```console
-$ dub run dbmigrations@0.2.0 scaffold -n users
+$ dub run dbmigrations@0.3.0 scaffold -n users
 Created ./db/migrations/20240524213223-users.sql
 ```
 
@@ -49,7 +55,7 @@ DROP TABLE users;
 Run `dbmigrations up` to apply all the available migrations.
 
 ```console
-$ dub run dbmigrations@0.2.0 up
+$ dub run dbmigrations@0.3.0 up
 OK  20240524135055-users
 OK  20240524135713-api-keys
 ```
@@ -59,7 +65,7 @@ OK  20240524135713-api-keys
 Check the status of the migrations by running
 
 ```console
-$ dub run dbmigrations@0.2.0 status
+$ dub run dbmigrations@0.3.0 status
 Sep 02, 2024 06:09:50  20240524135055-users
               pending  20240524135713-api-keys
 ```
@@ -67,13 +73,13 @@ Sep 02, 2024 06:09:50  20240524135055-users
 ### Downgrade(one by one)
 
 ```console
-$ dub run dbmigrations@0.2.0 down
+$ dub run dbmigrations@0.3.0 down
 OK  20240524135713-api-keys
 ```
 
 ## TODO:
 
-- Only Postgres is supported now, add support for MySQL and Sqlite
+- Postgres and SQLite are supported now, add support for MySQL.
 
 ## Contributing
 

@@ -7,18 +7,16 @@ import core.stdc.stdlib : exit;
 
 public import models.helpers;
 import models.pg;
+import models.sqlite;
 
 MigrationDriver migrationDriver;
 
 static this()
 {
     auto databaseUrl = environment.get("DATABASE_URL", "");
-    if (databaseUrl.empty)
-    {
-        stderr.writeln("DATABASE_URL environment variable is not set");
-        exit(1);
-    }
 
     if (databaseUrl.startsWith("postgres:"))
         migrationDriver = PostgresDriver.initialize(databaseUrl);
+    else if (databaseUrl.startsWith("sqlite:"))
+        migrationDriver = SqliteDriver.initialize(databaseUrl);
 }

@@ -1,6 +1,7 @@
 import std.stdio;
 import std.getopt;
 import std.string;
+import std.process;
 
 import commands;
 
@@ -25,6 +26,12 @@ int main(string[] args)
     if (args.length < 2 || globalOpts.helpWanted)
     {
         commandHelp;
+        return 1;
+    }
+
+    if (args[1] != "scaffold" && environment.get("DATABASE_URL", "") == "")
+    {
+        stderr.writeln("DATABASE_URL environment variable is not set");
         return 1;
     }
 

@@ -5,9 +5,9 @@ import std.typecons;
 struct MigrationRecord
 {
     string name;
-    string filename;
     long level;
     string createdAt;
+    string filename;
 }
 
 interface MigrationDriver
